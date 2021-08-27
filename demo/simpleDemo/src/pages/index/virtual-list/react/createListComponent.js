@@ -154,6 +154,8 @@ export default function createListComponent ({
         if (offset === 0) {
           return 0
         }
+        console.log(`sodalog offset`, offset)
+        console.log(`sodalog props.unlimitedSize`, props.unlimitedSize)
         if (!props.unlimitedSize) {
           return Math.min(props.itemCount - 1, Math.floor(offset / props.itemSize))
         }
@@ -489,13 +491,18 @@ export default function createListComponent ({
       const onScroll = isHorizontal ? this._onScrollHorizontal : this._onScrollVertical
 
       const [startIndex, stopIndex] = this._getRangeToRender()
+      console.log(`sodalog startIndex`, startIndex)
+      console.log(`sodalog stopIndex`, stopIndex)
 
       const items = []
+
+      console.log(`itemCount`, itemCount)
 
       if (itemCount > 0) {
         for (let index = startIndex; index <= stopIndex; index++) {
           const key = itemKey(index, itemData)
           let style
+          console.log(`position`, position)
           if (position === 'relative') {
             const size = getItemSize(this.props, index, this)
             style = {
@@ -519,6 +526,7 @@ export default function createListComponent ({
       // So their actual sizes (if variable) are taken into consideration.
 
       const estimatedTotalSize = getEstimatedTotalSize(this.props, this)
+      console.log(`estimatedTotalSize`, estimatedTotalSize);
       const outerElementProps = {
         ...rest,
         id,
@@ -633,6 +641,7 @@ export default function createListComponent ({
 
       const startIndex = getStartIndexForOffset(this.props, scrollOffset, this)
       const stopIndex = getStopIndexForStartIndex(this.props, scrollOffset, startIndex, this) // Overscan by one item in each direction so that tab/focus works.
+
       // If there isn't at least one extra item, tab loops back around.
 
       const overscanBackward = !isScrolling || scrollDirection === 'backward' ? Math.max(1, overscanCount) : 1

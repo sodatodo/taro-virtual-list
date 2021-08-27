@@ -14,7 +14,7 @@ export interface OuterScrollViewPropsType {
 }
 const OuterScrollView = React.forwardRef<OuterScrollViewRefType, OuterScrollViewPropsType>(
     (props, ref) => {
-        const { style, onScroll, layout}  = props;
+        const { style, onScroll, layout, ...rest}  = props;
         console.log(`style`, style)
         console.log(`onScroll`, onScroll)
         console.log(`layout`, layout)
@@ -26,6 +26,9 @@ const OuterScrollView = React.forwardRef<OuterScrollViewRefType, OuterScrollView
         return React.createElement(ScrollView, {
             ref,
             onScroll: handleScroll,
+            style,
+            scrollY: true,
+            ...rest
         })
     }
 )

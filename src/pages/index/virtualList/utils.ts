@@ -7,3 +7,11 @@ const convertPxToInt = (style: string | number) => {
     }
     return style;
 }
+
+export const isHorizontalFunc = (direction, layout): boolean => {
+    return direction === 'horizontal' || layout === 'horizontal';
+}
+
+export function isRtlFunc (direction) {
+    return direction === 'rtl'
+}

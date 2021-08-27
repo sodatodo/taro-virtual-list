@@ -15,10 +15,6 @@ function convertPxToInt (style) {
 const OuterScrollView = React.forwardRef(
   (props, ref) => {
     const { style, onScroll, onScrollNative, layout, ...rest } = props
-    console.log(`sodalog style`, style);
-    console.log(`sodalog onScroll`, onScroll);
-    console.log(`sodalog onScrollNative`, onScrollNative);
-    console.log(`sodalog layout`, layout)
     const handleScroll = event => {
       onScroll({
         ...event,

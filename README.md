@@ -9,3 +9,5 @@ taro虚拟列表组件
 
 ## createListComponent.tsc
 用于构件组件的整体逻辑流程
+该组件的 props 主要来自 VirtualList 和 FixedSizeList
+用两个文件来分别处理核心组件的props和中间状态

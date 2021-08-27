@@ -163,6 +163,7 @@ createListComponent({
       // TODO Deprecate direction "horizontal"
       const numVisibleItems = Math.ceil((size + scrollOffset - offset) / itemSize)
       /** -1 is because stop index is inclusive */
+      console.log(`startIndex + numVisibleItems - 1`, startIndex + numVisibleItems - 1)
       return Math.max(startIndex, Math.min(itemCount - 1, startIndex + numVisibleItems - 1))
     }
     return Math.max(startIndex, Math.min(itemCount - 1, ref._getSizeCount(props, size + scrollOffset)))
