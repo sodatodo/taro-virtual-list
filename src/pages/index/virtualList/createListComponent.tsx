@@ -1,4 +1,5 @@
-import { PureComponent } from "react";
+import { Component, createElement, PureComponent } from "react";
+import { View } from '@tarojs/components';
 
 let INSTANCE_ID = 0;
 
@@ -8,6 +9,8 @@ export type createListComponentParams = {
 
 export interface IListProps {
     initialScrollOffset?: number;
+    itemElementType: Component;
+    outerElementType: React.FunctionComponent;
 }
 export interface IListState {
     id: string;
@@ -51,6 +54,11 @@ export default function createListComponent () {
                 clientHeight: 0,
                 clientWidth: 0
             }
+        }
+
+        render() {
+            const { outerElementType } = this.props;
+            return createElement(outerElementType)
         }
     }
 }
