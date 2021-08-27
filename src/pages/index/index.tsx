@@ -1,5 +1,5 @@
 import React, { Component, FC, useState } from 'react'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Button, Swiper, SwiperItem } from '@tarojs/components'
 import VirtualList from './virtualList'
 
 import './index.scss'
@@ -21,35 +21,67 @@ function buildData(offset = 0) {
 
 export type IndexProps = {}
 const Index: FC<IndexProps> = ({}) => {
-  const [data, setData] = useState(buildData(0));
-  const itemSize = 100;
+  const [data, setData] = useState(buildData(0))
+  const itemSize = 100
   const handleScroll = ({ scrollDirection, scrollOffset }) => {
     console.log('virtual 最外层滚动事件')
   }
 
   const handleTest = () => {
-    function tick() {
-    }
+    function tick() {}
   }
-
 
   return (
     <View className="index">
       <Button className="add_btn" onClick={handleTest}>
         test
       </Button>
-
-      <VirtualList
-        className="list"
-        height={500}
-        itemData={data}
-        itemCount={data.length}
-        itemSize={itemSize}
-        width="100%"
-        onScroll={handleScroll}
+      <Swiper 
+        className='test-h'
+        style="height: 100vh;"
+        indicatorColor='#999'
+        indicatorActiveColor='#333'
       >
-        {Row}
-      </VirtualList>
+        <SwiperItem>
+          <VirtualList
+            className="list"
+            height={500}
+            itemData={data}
+            itemCount={data.length}
+            itemSize={itemSize}
+            width="100%"
+            onScroll={handleScroll}
+          >
+            {Row}
+          </VirtualList>
+        </SwiperItem>
+        <SwiperItem>
+          <VirtualList
+            className="list"
+            height={500}
+            itemData={data}
+            itemCount={data.length}
+            itemSize={itemSize}
+            width="100%"
+            onScroll={handleScroll}
+          >
+            {Row}
+          </VirtualList>
+        </SwiperItem>
+        <SwiperItem>
+          <VirtualList
+            className="list"
+            height={500}
+            itemData={data}
+            itemCount={data.length}
+            itemSize={itemSize}
+            width="100%"
+            onScroll={handleScroll}
+          >
+            {Row}
+          </VirtualList>
+        </SwiperItem>
+      </Swiper>
     </View>
   )
 }
