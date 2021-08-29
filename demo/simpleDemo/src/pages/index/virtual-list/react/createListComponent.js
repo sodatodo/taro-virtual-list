@@ -197,6 +197,7 @@ export default function createListComponent ({
         const size = getItemSize(this.props, index, this) // TODO Deprecate direction "horizontal"
         const isHorizontal = isHorizontalFunc(this.props)
         const isRtl = isRtlFunc(this.props)
+        
         if (itemStyleCache.hasOwnProperty(index)) {
           style = itemStyleCache[index]
           if (isHorizontal) {
@@ -491,12 +492,8 @@ export default function createListComponent ({
       const onScroll = isHorizontal ? this._onScrollHorizontal : this._onScrollVertical
 
       const [startIndex, stopIndex] = this._getRangeToRender()
-      console.log(`sodalog startIndex`, startIndex)
-      console.log(`sodalog stopIndex`, stopIndex)
 
       const items = []
-
-      console.log(`itemCount`, itemCount)
 
       if (itemCount > 0) {
         for (let index = startIndex; index <= stopIndex; index++) {

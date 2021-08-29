@@ -7,7 +7,7 @@ import createListComponent, {
 import { isHorizontalFunc } from './utils'
 
 const validateProps = (nextProps: IListProps, prevState: IListState) => {
-  console.log('sodalog validate props', nextProps)
+  
 }
 
 const getStartIndexForOffset = (props, scrollOffset, ref) => {

@@ -20,7 +20,7 @@ function buildData(offset = 0) {
 }
 
 export type IndexProps = {}
-const Index: FC<IndexProps> = ({}) => {
+const Index: FC<IndexProps> = ({ }) => {
   const [data, setData] = useState(buildData(0))
   const itemSize = 100
   const handleScroll = ({ scrollDirection, scrollOffset }) => {
@@ -28,7 +28,7 @@ const Index: FC<IndexProps> = ({}) => {
   }
 
   const handleTest = () => {
-    function tick() {}
+    function tick() { }
   }
 
   return (
@@ -36,7 +36,18 @@ const Index: FC<IndexProps> = ({}) => {
       <Button className="add_btn" onClick={handleTest}>
         test
       </Button>
-      <Swiper 
+      <VirtualList
+        className="list"
+        height={500}
+        itemData={data}
+        itemCount={data.length}
+        itemSize={itemSize}
+        width="100%"
+        onScroll={handleScroll}
+      >
+        {Row}
+      </VirtualList>
+      {/* <Swiper 
         className='test-h'
         style="height: 100vh;"
         indicatorColor='#999'
@@ -81,7 +92,7 @@ const Index: FC<IndexProps> = ({}) => {
             {Row}
           </VirtualList>
         </SwiperItem>
-      </Swiper>
+      </Swiper> */}
     </View>
   )
 }

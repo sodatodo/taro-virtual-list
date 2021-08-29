@@ -1,4 +1,4 @@
-const convertPxToInt = (style: string | number) => {
+export const convertPxToInt = (style: string | number) => {
     if (typeof style === 'string') {
         const str = style.toLowerCase();
         if (/px$/.test(str)) {

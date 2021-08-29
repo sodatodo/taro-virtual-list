@@ -1,8 +1,9 @@
-import { CSSProperties } from 'react'
-import { View } from '@tarojs/components';
-import { Component, createElement, PureComponent } from 'react'
+import { createElement, PureComponent, CSSProperties } from 'react'
 import { memoizeOne } from './memoize'
 import { isHorizontalFunc, isRtlFunc } from './utils'
+import { cancelTimeout, requestTimeout } from './timer';
+
+const IS_SCROLLING_DEBOUNCE_INTERVAL = 200;
 
 let INSTANCE_ID = 0
 
@@ -54,7 +55,7 @@ export default function createListComponent({
     (_temp = _class = class List extends PureComponent<IListProps, IListState> {
       private _instanceProps: undefined
       private _outerRef: undefined
-      private _resetIsScrollingTimeoutId: null
+      private _resetIsScrollingTimeoutId: any;
       field: {
         scrollLeft: number
         scrollTop: number
@@ -62,6 +63,7 @@ export default function createListComponent({
         scrollWidth: number
         clientHeight: number
         clientWidth: number
+        diffOffset?: number
       }
 
       // 从props中获取state
@@ -99,8 +101,58 @@ export default function createListComponent({
         }
       }
 
+      _resetIsScrolling = () => {
+        this._resetIsScrollingTimeoutId = null;
+        this.setState({
+          isScrolling: false,
+        }, () => {
+          this._getItemStyleCache(-1, null)
+        })
+      }
+      _resetIsScrollingDebounced = () => {
+        if (this._resetIsScrollingTimeoutId !== null) {
+          cancelTimeout(this._resetIsScrollingTimeoutId);
+        }
+
+        this._resetIsScrollingTimeoutId = requestTimeout(this._resetIsScrolling, IS_SCROLLING_DEBOUNCE_INTERVAL);
+      }
+
+
       _onScrollVertical = (event) => {
-        console.log('sodalog onScroll')
+        const {
+          clientHeight,
+          scrollHeight,
+          scrollWidth,
+          scrollTop,
+          scrollLeft
+        } = event.currentTarget;
+        // console.log(`clientHeight`, clientHeight);
+        // console.log(`scrollHeight`, scrollHeight);
+        // console.log(`scrollWidth`, scrollWidth);
+        // console.log(`scrollTop`, scrollTop);
+        // console.log(`scrollLeft`, scrollLeft);
+        // console.log(`this.field.scrollTop`, this.field.scrollTop)
+        this.setState(prevState => {
+          const diffOffset = this.field.scrollTop - scrollTop;
+          if (prevState.scrollOffset === scrollTop || this.field.diffOffset === -diffOffset) {
+            return null;
+          }
+          const scrollOffset = Math.max(0, Math.min(scrollTop, scrollHeight - clientHeight));
+          this.field.scrollHeight = getEstimatedTotalSize(this.props, this)
+          this.field.scrollWidth = scrollWidth
+          this.field.scrollTop = scrollOffset
+          this.field.scrollLeft = scrollLeft
+          this.field.clientHeight = clientHeight
+          this.field.clientWidth = scrollWidth
+          this.field.diffOffset = diffOffset
+
+          return {
+            isScrolling: true,
+            scrollDirection: prevState.scrollOffset < scrollOffset ? 'forward' : 'backward',
+            scrollOffset,
+            scrollUpdateWasRequested: false
+          }
+        }, this._resetIsScrollingDebounced)
       }
       _onScrollHorizontal = (event) => {}
 
@@ -246,16 +298,16 @@ export default function createListComponent({
         if (itemCount > 0) {
           for (let index = startIndex; index <= stopIndex; index++) {
             const key: number | string = itemKey(index, itemData)
-            let style: CSSProperties | undefined
+            let itemStyle: CSSProperties | undefined
             if (position === 'relative') {
               console.log('sodalog position function')
             } else {
-              style = this._getItemStyle(index)
+              itemStyle = this._getItemStyle(index)
             }
             items.push(
               createElement(
                 itemElementType,
-                { key, style },
+                { key, style: itemStyle, listIndex: key },
                 createElement(children, {
                   id: `${id}-${index}`,
                   data: itemData,
@@ -268,7 +320,6 @@ export default function createListComponent({
         }
 
         const estimatedTotalSize = getEstimatedTotalSize(this.props, this)
-        console.log(`estimatedTotalSize`, estimatedTotalSize)
 
         const outerElementProps = {
           ...rest,
@@ -287,8 +338,6 @@ export default function createListComponent({
             ...style,
           },
         }
-
-        console.log(`outerElementProps`, outerElementProps)
         // return createElement(View, { id: 'soda' }, 'hello world')
         return createElement(outerElementType, outerElementProps, 
             createElement(innerElementType, {
